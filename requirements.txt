@@ -1,0 +1,13 @@
+langchain==1.2.12
+langchain-community==0.4.1
+langchain-core==1.2.20
+langchain-openai
+langchain-ollama
+chromadb==1.5.5
+pandas==2.3.3
+numpy
+scikit-learn
+fastapi
+uvicorn
+pydantic
+python-dotenv
