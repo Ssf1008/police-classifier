@@ -75,9 +75,9 @@ async def classify_post(req: ClassifyRequest):
 
 
 @app.get("/classify", response_model=ClassifyResponse, summary="警情分类")
-async def classify_get(query: str, top_k: int = 5, llm_provider: str = "openai"):
+async def classify_get(req: ClassifyRequest):
     """
-    对新警情进行分类（GET 方法）
+    对新警情进行分类（GET 方法，接受 JSON body）
     
     参数:
     - query: 新警情文本
@@ -90,7 +90,6 @@ async def classify_get(query: str, top_k: int = 5, llm_provider: str = "openai")
     - reason: 分类理由
     - similar_cases: 相似案例
     """
-    req = ClassifyRequest(query=query, top_k=top_k, llm_provider=llm_provider)
     return await _classify_impl(req)
 
 
