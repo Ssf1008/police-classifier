@@ -56,9 +56,9 @@ class ClassifyResponse(BaseModel):
 
 
 @app.post("/classify", response_model=ClassifyResponse, summary="警情分类")
-async def classify(req: ClassifyRequest):
+async def classify_post(req: ClassifyRequest):
     """
-    对新警情进行分类
+    对新警情进行分类（POST 方法）
     
     参数:
     - query: 新警情文本
@@ -71,6 +71,31 @@ async def classify(req: ClassifyRequest):
     - reason: 分类理由
     - similar_cases: 相似案例
     """
+    return await _classify_impl(req)
+
+
+@app.get("/classify", response_model=ClassifyResponse, summary="警情分类")
+async def classify_get(query: str, top_k: int = 5, llm_provider: str = "openai"):
+    """
+    对新警情进行分类（GET 方法）
+    
+    参数:
+    - query: 新警情文本
+    - top_k: 检索相似案例数量（默认5）
+    - llm_provider: LLM 提供商（openai 或 ollama）
+    
+    返回:
+    - category: 分类类别
+    - confidence: 置信度
+    - reason: 分类理由
+    - similar_cases: 相似案例
+    """
+    req = ClassifyRequest(query=query, top_k=top_k, llm_provider=llm_provider)
+    return await _classify_impl(req)
+
+
+async def _classify_impl(req: ClassifyRequest):
+    """分类实现"""
     try:
         logger.info(f"收到分类请求: {req.query[:50]}...")
         
